@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from zope import component
 from zope import interface
 from zope import schema
 
@@ -36,3 +37,17 @@ class OrderFormSchema(interface.Interface):
                                              _(u'Pepperoni'),
                                              _(u'Hawaiian')])
         )
+
+
+class OrderFormAdapter(object):
+    """ This generic adapter allows to fill the form from anywhere """
+    interface.implements(OrderFormSchema)
+    component.adapts(interface.Interface)
+
+    def __init__(self, context):
+        self.name = None
+        self.address1 = None
+        self.address2 = None
+        self.postcode = None
+        self.telephone = None
+        self.orderItems = None
