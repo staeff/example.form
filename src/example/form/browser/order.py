@@ -7,6 +7,8 @@ from zope import interface
 from zope import schema
 from z3c.form import form, button
 from z3c.form import validator
+from z3c.form.interfaces import ActionExecutionError
+from z3c.form.interfaces import WidgetActionExecutionError
 from zope.interface import invariant, Invalid
 
 from example.form import _
@@ -161,6 +163,22 @@ class OrderForm(AutoExtensibleForm, form.Form):
         # of the form data, which has been converted to the field’s underlying
         # type by each widget and any errors.
         data, errors = self.extractData()
+
+        # Some additional validation
+        if 'address1' in data and 'address2' in data:
+
+            # Access values in data by index notation, because data is a dict
+            if len(data['address1']) < 2 and len(data['address2']) < 2:
+                raise ActionExecutionError(
+                    Invalid(_(u"Please provide a valid address"))
+                    )
+            elif len(data['address1']) < 2 and len(data['address2']) > 10:
+                raise WidgetActionExecutionError(
+                    'address2',
+                    Invalid(u"Please put the main part of the address \
+                              in the first field")
+                    )
+
         if errors:
             self.status = self.formErrorsMessage
             return
