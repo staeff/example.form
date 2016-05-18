@@ -7,7 +7,7 @@ from zope import interface
 from zope import schema
 from z3c.form import form, button
 from z3c.form import validator
-from zope.interface import Invalid
+from zope.interface import invariant, Invalid
 
 from example.form import _
 
@@ -60,6 +60,11 @@ class OrderFormSchema(model.Schema):
                                              _(u'Pepperoni'),
                                              _(u'Hawaiian')])
         )
+
+    @invariant
+    def addressInvariant(data):
+        if data.address1 == data.address2:
+            raise Invalid(_(u"Address line 1 and 2 should not be the same!"))
 
 
 class PhoneNumberValidator(validator.SimpleFieldValidator):
