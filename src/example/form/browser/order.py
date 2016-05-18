@@ -5,11 +5,13 @@ from Products.statusmessages.interfaces import IStatusMessage
 from zope import component
 from zope import interface
 from zope import schema
-from z3c.form import form, button
+from z3c.form import button
+from z3c.form.form import Form
 from z3c.form import validator
 from z3c.form.interfaces import ActionExecutionError
 from z3c.form.interfaces import WidgetActionExecutionError
 from zope.interface import invariant, Invalid
+from plone.autoform import directives as aform
 
 from example.form import _
 
@@ -27,7 +29,7 @@ def postcodeConstraint(value):
     return True
 
 
-class OrderFormSchema(model.Schema):
+class IOrderFormSchema(model.Schema):
     """ A schema that describes the form’s fields """
 
     name = schema.TextLine(
@@ -105,18 +107,41 @@ class PhoneNumberValidator(validator.SimpleFieldValidator):
 # Set conditions for which fields the validator class applies
 # If we would pass a field type instead of an instance, the validator
 # will be used for all fields in the form (of the given type).
-validator.WidgetValidatorDiscriminators(
+"""validator.WidgetValidatorDiscriminators(
     PhoneNumberValidator,
     field=OrderFormSchema['telephone']
     )
 
 # Register the validator so it will be looked up by z3c.form machinery
 component.provideAdapter(PhoneNumberValidator)
+"""
+
+
+@aform.validator(field=IOrderFormSchema['telephone'])
+def validate_telephone(value):
+    allowed_characters = "+- () / 0123456789"
+
+    if value is not None:
+
+        value = value.strip()
+
+        if value == "":
+            # Assume empty string = no input
+            return
+
+        # The value is not required
+        for c in value:
+            if c not in allowed_characters:
+                raise interface.Invalid(_(u"Phone number contains \
+                                            bad characters"))
+
+        if len(value) < 7:
+            raise interface.Invalid(_(u"Phone number is too short"))
 
 
 class OrderFormAdapter(object):
     """ This generic adapter allows to fill the form from anywhere """
-    interface.implements(OrderFormSchema)
+    interface.implements(IOrderFormSchema)
     component.adapts(interface.Interface)
 
     def __init__(self, context):
@@ -128,15 +153,16 @@ class OrderFormAdapter(object):
         self.orderItems = None
 
 
-class OrderForm(AutoExtensibleForm, form.Form):
+class OrderForm(AutoExtensibleForm, Form):
     """ The form view from one of the standard base classes in plone.autoform
     (AutoExtensibleForm). It comes without any of the standard actions.
     Specialised base classes such as SchemaAddForm or SchemaEditForm have
     actions. It basically mirrors the z3c.form.form.Form base class.
     """
     # specify the schema via the schema attribute
-    schema = OrderFormSchema
+    schema = IOrderFormSchema
     form_name = 'order_form'
+    ignoreContext = True
 
     # rendered as page header in standard form template
     label = _(u"Order your pizza")
