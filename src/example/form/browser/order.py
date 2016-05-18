@@ -5,8 +5,22 @@ from zope import component
 from zope import interface
 from zope import schema
 from z3c.form import form, button
+from zope.interface import Invalid
 
 from example.form import _
+
+
+def postcodeConstraint(value):
+    """
+    param: value (unicode)
+    Check if 'value' starts with 6.
+    If 'True' return 'True'
+    If 'False' raise 'Invalid' exception and pass error message as the
+    exception argument. Otherwise, we return True.
+    """
+    if not value.startswith('6'):
+        raise Invalid(_(u"We can only deliver to postcodes starting with 6"))
+    return True
 
 
 class OrderFormSchema(interface.Interface):
@@ -27,6 +41,7 @@ class OrderFormSchema(interface.Interface):
 
     postcode = schema.TextLine(
             title=_(u"Postcode"),
+            constraint=postcodeConstraint,
         )
 
     telephone = schema.ASCIILine(
