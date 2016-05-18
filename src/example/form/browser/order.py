@@ -6,6 +6,7 @@ from zope import component
 from zope import interface
 from zope import schema
 from z3c.form import form, button
+from z3c.form import validator
 from zope.interface import Invalid
 
 from example.form import _
@@ -47,7 +48,10 @@ class OrderFormSchema(model.Schema):
 
     telephone = schema.ASCIILine(
             title=_(u"Telephone number"),
-            description=_(u"We prefer a mobile number"),
+            description=_(u"Your phone number in international \
+                            format. E.g. +44 12 123 1234"),
+            required=False,
+            default="+44 12 123 1234"
         )
 
     orderItems = schema.Set(
@@ -56,6 +60,51 @@ class OrderFormSchema(model.Schema):
                                              _(u'Pepperoni'),
                                              _(u'Hawaiian')])
         )
+
+
+class PhoneNumberValidator(validator.SimpleFieldValidator):
+    """ z3c.form validator class for international phone numbers """
+
+    def validate(self, value):
+        """ Calling the superclass version of validate() to gain
+            the default validation logic.
+            In this method we can use variables like self.context,
+            self.request, self.view, self.field and self.widget
+            to access the adapted objects
+
+            Validate international phone number on input
+        """
+        super(PhoneNumberValidator, self).validate(value)
+
+        allowed_characters = "+- () / 0123456789"
+
+        if value is not None:
+
+            value = value.strip()
+
+            if value == "":
+                # Assume empty string = no input
+                return
+
+            # The value is not required
+            for c in value:
+                if c not in allowed_characters:
+                    raise interface.Invalid(_(u"Phone number contains \
+                                                bad characters"))
+
+            if len(value) < 7:
+                raise interface.Invalid(_(u"Phone number is too short"))
+
+# Set conditions for which fields the validator class applies
+# If we would pass a field type instead of an instance, the validator
+# will be used for all fields in the form (of the given type).
+validator.WidgetValidatorDiscriminators(
+    PhoneNumberValidator,
+    field=OrderFormSchema['telephone']
+    )
+
+# Register the validator so it will be looked up by z3c.form machinery
+component.provideAdapter(PhoneNumberValidator)
 
 
 class OrderFormAdapter(object):
