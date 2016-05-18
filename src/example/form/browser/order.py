@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
+from plone import api
 from plone.supermodel import model
 from plone.autoform.form import AutoExtensibleForm
+from plone.registry.interfaces import IRegistry
 from Products.statusmessages.interfaces import IStatusMessage
 from zope import component
 from zope import interface
@@ -9,7 +11,9 @@ from z3c.form import form, button
 from z3c.form import validator
 from z3c.form.interfaces import ActionExecutionError
 from z3c.form.interfaces import WidgetActionExecutionError
+from zope.component import queryUtility
 from zope.interface import invariant, Invalid
+from zope.schema.vocabulary import SimpleVocabulary
 
 from example.form import _
 
@@ -25,6 +29,22 @@ def postcodeConstraint(value):
     if not value.startswith('6'):
         raise Invalid(_(u"We can only deliver to postcodes starting with 6"))
     return True
+
+
+def availablePizzas(context):
+
+    pizzatypes = api.portal.get_registry_record('example.form.pizzaTypes')
+
+    terms = []
+    import ipdb; ipdb.set_trace()
+    for pizza in pizzatypes:
+        # create a term - the arguments are the value, the token and
+        # the title (optional)
+        terms.append(SimpleVocabulary.createTerm(
+            pizza, pizza.encode('utf-8'), pizza)
+            )
+
+    return SimpleVocabulary(terms)
 
 
 class OrderFormSchema(model.Schema):
@@ -152,6 +172,7 @@ class OrderForm(AutoExtensibleForm, form.Form):
 
         # call the base class version - this is very important!
         super(OrderForm, self).update()
+        availablePizzas()
 
     # Define actions. The actions are rendered as button in order
     # of their definition. The argument is a (translated) string

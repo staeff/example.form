@@ -43,6 +43,7 @@ setup(
         'setuptools',
         'z3c.jbot',
         'plone.app.z3cform',
+        'plone.app.registry',
     ],
     extras_require={
         'test': [
