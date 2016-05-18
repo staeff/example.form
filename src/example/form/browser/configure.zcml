@@ -17,4 +17,13 @@
       directory="static"
       />
 
+  <adapter factory=".order.OrderFormAdapter"/>
+
+  <browser:page
+      for="Products.CMFCore.interfaces.ISiteRoot"
+      name="order-pizza"
+      class=".order.OrderForm"
+      permission="zope2.View"
+      />
+
 </configure>
