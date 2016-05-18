@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from plone.supermodel import model
 from plone.autoform.form import AutoExtensibleForm
 from Products.statusmessages.interfaces import IStatusMessage
 from zope import component
@@ -23,7 +24,7 @@ def postcodeConstraint(value):
     return True
 
 
-class OrderFormSchema(interface.Interface):
+class OrderFormSchema(model.Schema):
     """ A schema that describes the form’s fields """
 
     name = schema.TextLine(
