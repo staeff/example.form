@@ -158,7 +158,7 @@ class OrderForm(AutoExtensibleForm, form.Form):
     # of their definition. The argument is a (translated) string
     # that will be used as a button label. The decorated handler
     # function will be called when the button is clicked.
-    @button.buttonAndHandler(_(u'Order'))
+    @button.buttonAndHandler(_(u'Order'), accessKey=u"o")
     def handleApply(self, action):
         # Extract the data from the form. self.extractData() returns a tuple
         # of the form data, which has been converted to the field’s underlying
@@ -209,7 +209,7 @@ class OrderForm(AutoExtensibleForm, form.Form):
         # In this case, that means the portal front page.
         self.request.response.redirect(contextURL)
 
-    @button.buttonAndHandler(_(u"Cancel"))
+    @button.buttonAndHandler(_(u"Cancel"), accessKey=u"c")
     def handleCancel(self, action):
         """User cancelled. Redirect back to the front page.
         """
