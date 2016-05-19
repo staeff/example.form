@@ -27,6 +27,17 @@ def postcodeConstraint(value):
     return True
 
 
+def fake_daytime(form):
+    """ A contrieved function to show a how conditional actions can be
+    used. To use it for real:
+    import datetime
+    hour = datetime.datetime.now().hour
+    """
+    # change the value to e.g. 2 to let the condition be false
+    hour = 14
+    return hour >= 9 and hour <= 17
+
+
 class IOrderFormSchema(model.Schema):
     """ A schema that describes the form’s fields """
 
@@ -207,6 +218,14 @@ class OrderForm(AutoExtensibleForm, form.Form):
         contextURL = self.context.absolute_url()
         # Redirect the user to the context’s default view.
         # In this case, that means the portal front page.
+        self.request.response.redirect(contextURL)
+
+    @button.buttonAndHandler(_(u'Call us'), condition=fake_daytime)
+    def handleCallBackRequest(self, action):
+        """This is just to demonstrate conditions on actions.
+        We just redirect to the front page.
+        """
+        contextURL = self.context.absolute_url()
         self.request.response.redirect(contextURL)
 
     @button.buttonAndHandler(_(u"Cancel"), accessKey=u"c")
