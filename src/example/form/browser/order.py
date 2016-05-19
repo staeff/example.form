@@ -43,6 +43,9 @@ def fake_daytime(form):
 class IOrderFormSchema(model.Schema):
     """ A schema that describes the form’s fields """
 
+    # Main form. Any fields not explicitly associated with
+    # a fieldset end up in this “default” fieldset.
+
     name = schema.TextLine(
             title=_(u"Your full name"),
         )
@@ -89,6 +92,27 @@ class IOrderFormSchema(model.Schema):
         title=_(u"Notes"),
         description=_(u"Please include any additional notes for delivery"),
         required=False
+    )
+
+    # Feedback fieldset
+
+    model.fieldset(
+        'feedback',
+        label=_(u"Feedback"),
+        fields=['feedbackNote', 'feedbackEmail']
+    )
+
+    feedbackNote = schema.Text(
+        title=_(u"Feedback"),
+        description=_(u"Please provide any feedback below"),
+        required=False,
+    )
+
+    feedbackEmail = schema.TextLine(
+        title=_(u"Email address"),
+        description=_(u"If you'd like us to contact you, \
+                        please give us an email address below"),
+        required=False,
     )
 
 
