@@ -56,6 +56,9 @@ class IOrderFormSchema(model.Schema):
             required=False,
         )
 
+    # just for illustration. klass for css class is special, because
+    # class is a reserved word in python
+    aform.widget('postcode', klass='context')
     postcode = schema.TextLine(
             title=_(u"Postcode"),
             constraint=postcodeConstraint,
