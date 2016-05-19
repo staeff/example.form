@@ -134,7 +134,8 @@ class OrderForm(AutoExtensibleForm, form.Form):
     Specialised base classes such as SchemaAddForm or SchemaEditForm have
     actions. It basically mirrors the z3c.form.form.Form base class.
     """
-    # specify the schema via the schema attribute
+    # specify the schema via the schema attribute, aka the schema shortcut
+    # that is provided by plone.autoform.
     schema = IOrderFormSchema
     form_name = 'order_form'
 
