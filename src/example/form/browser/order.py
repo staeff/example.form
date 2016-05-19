@@ -27,7 +27,7 @@ def postcodeConstraint(value):
     return True
 
 
-class OrderFormSchema(model.Schema):
+class IOrderFormSchema(model.Schema):
     """ A schema that describes the form’s fields """
 
     name = schema.TextLine(
@@ -107,7 +107,7 @@ class PhoneNumberValidator(validator.SimpleFieldValidator):
 # will be used for all fields in the form (of the given type).
 validator.WidgetValidatorDiscriminators(
     PhoneNumberValidator,
-    field=OrderFormSchema['telephone']
+    field=IOrderFormSchema['telephone']
     )
 
 # Register the validator so it will be looked up by z3c.form machinery
@@ -116,7 +116,7 @@ component.provideAdapter(PhoneNumberValidator)
 
 class OrderFormAdapter(object):
     """ This generic adapter allows to fill the form from anywhere """
-    interface.implements(OrderFormSchema)
+    interface.implements(IOrderFormSchema)
     component.adapts(interface.Interface)
 
     def __init__(self, context):
@@ -135,7 +135,7 @@ class OrderForm(AutoExtensibleForm, form.Form):
     actions. It basically mirrors the z3c.form.form.Form base class.
     """
     # specify the schema via the schema attribute
-    schema = OrderFormSchema
+    schema = IOrderFormSchema
     form_name = 'order_form'
 
     # rendered as page header in standard form template
