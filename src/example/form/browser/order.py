@@ -165,6 +165,11 @@ class OrderForm(AutoExtensibleForm, form.Form):
         # call the base class version - this is very important!
         super(OrderForm, self).update()
 
+    def updateActions(self):
+        super(OrderForm, self).updateActions()
+        self.actions["order"].addClass("context")
+        self.actions["cancel"].addClass("standalone")
+
     # Define actions. The actions are rendered as button in order
     # of their definition. The argument is a (translated) string
     # that will be used as a button label. The decorated handler
