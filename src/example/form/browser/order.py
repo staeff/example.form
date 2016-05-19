@@ -9,6 +9,8 @@ from z3c.form import form, button
 from z3c.form import validator
 from z3c.form.interfaces import ActionExecutionError
 from z3c.form.interfaces import WidgetActionExecutionError
+from plone.app.z3cform.wysiwyg import WysiwygFieldWidget
+from plone.autoform import directives as aform
 from zope.interface import invariant, Invalid
 
 from example.form import _
@@ -78,6 +80,13 @@ class IOrderFormSchema(model.Schema):
     def addressInvariant(data):
         if data.address1 == data.address2:
             raise Invalid(_(u"Address line 1 and 2 should not be the same!"))
+
+    aform.widget('notes', WysiwygFieldWidget)
+    notes = schema.Text(
+        title=_(u"Notes"),
+        description=_(u"Please include any additional notes for delivery"),
+        required=False
+    )
 
 
 class PhoneNumberValidator(validator.SimpleFieldValidator):
