@@ -6,7 +6,29 @@
 example.form
 ==============================================================================
 
-Tell me what your product does
+This package shows how to create a schema-driven form in Plone.
+It follows the documentation at http://docs.plone.org/develop/addons/schema-driven-forms/
+
+This form will have examples for a lot of functionality needed for forms.
+
+.. image:: images/schema-driven-form-1.png
+
+.. image:: images/schema-driven-form-2.png
+
+
+- Creating a simple form
+    - Creating a package
+    - Creating a schema
+    - Creating the form view
+    - Testing the form
+
+- Customising form behaviour
+
+    - Validation
+    - Vocabularies
+    - Widgets
+    - Actions (buttons)
+    - Fieldsets
 
 Features
 --------
@@ -24,15 +46,16 @@ This add-on can be seen in action at the following sites:
 Documentation
 -------------
 
-Full documentation for end users can be found in the "docs" folder, and is also available online at http://docs.plone.org/foo/bar
+Full documentation for end users can be found in the "docs" folder, and is also
+available online at http://docs.plone.org/develop/addons/schema-driven-forms/
 
 
 Translations
 ------------
 
-This product has been translated into
+This product has not been translated into
 
-- Klingon (thanks, K'Plai)
+- German
 
 
 Installation
@@ -54,16 +77,9 @@ and then running ``bin/buildout``
 Contribute
 ----------
 
-- Issue Tracker: https://github.com/collective/example.form/issues
-- Source Code: https://github.com/collective/example.form
-- Documentation: https://docs.plone.org/foo/bar
-
-
-Support
--------
-
-If you are having issues, please let us know.
-We have a mailing list located at: project@example.com
+- Issue Tracker: https://github.com/staeff/example.form/issues
+- Source Code: https://github.com/staeff/example.form
+- Documentation: http://docs.plone.org/develop/addons/schema-driven-forms/
 
 
 License
